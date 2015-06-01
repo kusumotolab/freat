@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<config>
+	<general>
+		<language>java</language>
+		<threads>4</threads>
+		<batch>100000</batch>
+		<database>resources/test.db</database>
+	</general>
+	<targets>
+		<target>
+			<name>clonetracker</name>
+			<repository>file:///C:/Users/k-hotta/repositories/repository-clonetracker</repository>
+			<relative>/c20r_main/src</relative>
+			<start>1</start>
+			<end>419</end>
+		</target>
+	</targets>
+</config>
