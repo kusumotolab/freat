@@ -16,4 +16,8 @@
 			<end>419</end>
 		</target>
 	</targets>
+	<servlet>
+		<port>8080</port>
+		<urlpattern>/data</urlpattern>
+	</servlet>
 </config>
