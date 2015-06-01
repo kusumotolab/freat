@@ -2,9 +2,11 @@ package jp.ac.osaka_u.ist.sdl.freat.prepare;
 
 public interface ConfigConstant {
 
-	public static final String NODE_NAME_ROOT = "config";
+	public static final String NODE_NAME_CONFIG = "config";
 
 	public static final String NODE_NAME_GENERAL = "general";
+
+	public static final String NODE_NAME_THREAD = "threads";
 
 	public static final String NODE_NAME_BATCH = "batch";
 

@@ -2,7 +2,6 @@
 
 <config>
 	<general>
-		<language>java</language>
 		<threads>4</threads>
 		<batch>100000</batch>
 		<database>resources/test.db</database>
