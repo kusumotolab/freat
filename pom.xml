@@ -25,6 +25,13 @@
         <artifactId>tomcat-embed-jasper</artifactId>
         <version>${tomcat.version}</version>
     </dependency>
+        <dependency>
+    	<groupId>jp.ac.osaka_u.ist.sdl</groupId>
+    	<artifactId>ECTEC</artifactId>
+    	<version>20150602</version>
+    	<scope>system</scope>
+    	<systemPath>${basedir}/lib/ECTEC-ver150602.jar</systemPath>
+    </dependency>
     <dependency>
         <groupId>org.apache.tomcat</groupId>
         <artifactId>tomcat-jasper</artifactId>
