@@ -7,6 +7,8 @@ public class Config {
 
 	private String propPath;
 
+	private String logPath;
+
 	private String dbPath;
 
 	private Map<Integer, Repository> repositories;
@@ -29,6 +31,14 @@ public class Config {
 
 	public final void setPropPath(final String propPath) {
 		this.propPath = propPath;
+	}
+
+	public final String getLogPath() {
+		return logPath;
+	}
+
+	public final void setLogPath(final String logPath) {
+		this.logPath = logPath;
 	}
 
 	public final String getDbPath() {

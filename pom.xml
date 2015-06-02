@@ -28,9 +28,9 @@
         <dependency>
     	<groupId>jp.ac.osaka_u.ist.sdl</groupId>
     	<artifactId>ECTEC</artifactId>
-    	<version>20150602</version>
+    	<version>20150603</version>
     	<scope>system</scope>
-    	<systemPath>${basedir}/lib/ECTEC-ver150602.jar</systemPath>
+    	<systemPath>${basedir}/lib/ECTEC-ver150603.jar</systemPath>
     </dependency>
     <dependency>
         <groupId>org.apache.tomcat</groupId>
