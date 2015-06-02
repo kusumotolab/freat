@@ -5,6 +5,8 @@ import java.util.TreeMap;
 
 public class Config {
 
+	private String propPath;
+
 	private String dbPath;
 
 	private Map<Integer, Repository> repositories;
@@ -19,6 +21,14 @@ public class Config {
 
 	public Config() {
 		this.repositories = new TreeMap<Integer, Repository>();
+	}
+
+	public final String getPropPath() {
+		return propPath;
+	}
+
+	public final void setPropPath(final String propPath) {
+		this.propPath = propPath;
 	}
 
 	public final String getDbPath() {
