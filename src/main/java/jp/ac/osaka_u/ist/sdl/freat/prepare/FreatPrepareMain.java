@@ -11,6 +11,7 @@ import jp.ac.osaka_u.ist.sdl.ectec.db.DBMaker;
 import jp.ac.osaka_u.ist.sdl.ectec.main.clonedetector.CloneDetectorMain;
 import jp.ac.osaka_u.ist.sdl.ectec.main.combiner.CombinerMain;
 import jp.ac.osaka_u.ist.sdl.ectec.main.filedetector.FileDetectorMain;
+import jp.ac.osaka_u.ist.sdl.ectec.main.fragmentbrancher.CodeFragmentBrancherMain;
 import jp.ac.osaka_u.ist.sdl.ectec.main.fragmentdetector.CodeFragmentDetectorMain;
 import jp.ac.osaka_u.ist.sdl.ectec.main.genealogydetector.GenealogyDetectorMain;
 import jp.ac.osaka_u.ist.sdl.ectec.main.linker.CodeFragmentLinkDetectorMain;
@@ -65,6 +66,7 @@ public class FreatPrepareMain {
 		runFragmentDetector(config);
 		runCloneDetector(config);
 		runFragmentLinker(config);
+		runFragmentBrancher(config);
 		runFragmentGenealogyDetector(config);
 	}
 
@@ -205,6 +207,17 @@ public class FreatPrepareMain {
 		CodeFragmentLinkDetectorMain.main(args);
 	}
 
+	private void runFragmentBrancher(final Config config) throws Exception {
+		logger.info("start detecting fragment branches");
+		final String[] args = new String[4];
+		args[0] = "-p";
+		args[1] = config.getPropPath();
+		args[2] = "-d";
+		args[3] = config.getDbPath();
+		
+		CodeFragmentBrancherMain.main(args);
+	}
+	
 	private void runFragmentGenealogyDetector(final Config config)
 			throws Exception {
 		logger.info("start detecting fragment evolution");
