@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<config>
+	<general>
+		<threads>4</threads>
+		<xmx>4g</xmx>
+		<database>test.db</database>
+		<csv>repositories.csv</csv>
+	</general>
+	<targets>
+		<target>
+			<name>clonetracker</name>
+			<repository>file:///C:/Users/k-hotta/Downloads/repository-clonetracker/repository-clonetracker</repository>
+			<relative>/c20r_main/src</relative>
+			<start>1</start>
+			<end>419</end>
+		</target>
+		<target>
+			<name>ScorpioTM</name>
+			<repository>file:///C:/Users/k-hotta/Downloads/repository-ScorpioTM/repository-ScorpioTM</repository>
+			<relative>/trunk</relative>
+			<start>1</start>
+			<end>369</end>
+		</target>
+	</targets>
+	<servlet>
+		<port>8080</port>
+		<urlpattern>/data</urlpattern>
+	</servlet>
+	<jar>
+		<csv-prepare>makecsv.jar</csv-prepare>
+	</jar>
+</config>

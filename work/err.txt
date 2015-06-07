@@ -1,0 +1,6 @@
+2015-06-07 11:55:01.459 (       625 [ms]) WARN jp.ac.osaka_u.ist.sdl.ectec.vcs.svn.SVNTargetRevisionDetector
+ thread Thread-0 at SVNTargetRevisionDetector.java detectRevisionsAfterTargetCommits jp.ac.osaka_u.ist.sdl.ectec.vcs.svn.SVNTargetRevisionDetector.detectRevisionsAfterTargetCommits(SVNTargetRevisionDetector.java:106)
+	[clonetracker] revision 1 was ignored due to an error
+2015-06-07 11:55:43.265 (     26436 [ms]) WARN jp.ac.osaka_u.ist.sdl.ectec.main.fragmentdetector.CodeFragmentDetectingThread
+ thread Thread-1 at CodeFragmentDetectingThread.java run jp.ac.osaka_u.ist.sdl.ectec.main.fragmentdetector.CodeFragmentDetectingThread.run(CodeFragmentDetectingThread.java:166)
+something is wrong in processing /jp/ac/osaka_u/ist/sdl/c20r/diff/HunkDetectorTest.java in repository 0 at combined revision 453

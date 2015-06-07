@@ -11,6 +11,8 @@ public interface ConfigConstant {
 	public static final String NODE_NAME_BATCH = "batch";
 
 	public static final String NODE_NAME_DATABASE = "database";
+	
+	public static final String NODE_NAME_CSV = "csv";
 
 	public static final String NODE_NAME_TARGETS = "targets";
 

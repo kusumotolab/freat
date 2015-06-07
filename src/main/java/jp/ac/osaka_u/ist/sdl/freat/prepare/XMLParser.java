@@ -89,12 +89,6 @@ public class XMLParser implements ConfigConstant {
 			final Node child = listChildren.item(i);
 
 			switch (child.getNodeName()) {
-			case NODE_NAME_THREAD:
-				config.setThreads(Integer.parseInt(retrieveNodeValue(child)));
-				break;
-			case NODE_NAME_BATCH:
-				config.setBatch(Integer.parseInt(retrieveNodeValue(child)));
-				break;
 			case NODE_NAME_DATABASE:
 				config.setDbPath(retrieveNodeValue(child));
 				break;

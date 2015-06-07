@@ -7,15 +7,11 @@ public class Config {
 
 	private String propPath;
 
-	private String logPath;
-
 	private String dbPath;
+	
+	private String csvPath;
 
 	private Map<Integer, Repository> repositories;
-
-	private int batch;
-
-	private int threads;
 
 	private int port;
 
@@ -33,14 +29,6 @@ public class Config {
 		this.propPath = propPath;
 	}
 
-	public final String getLogPath() {
-		return logPath;
-	}
-
-	public final void setLogPath(final String logPath) {
-		this.logPath = logPath;
-	}
-
 	public final String getDbPath() {
 		return dbPath;
 	}
@@ -49,28 +37,20 @@ public class Config {
 		this.dbPath = dbPath;
 	}
 
+	public final String getCsvPath() {
+		return csvPath;
+	}
+
+	public final void setCsvPath(String csvPath) {
+		this.csvPath = csvPath;
+	}
+
 	public final Map<Integer, Repository> getRepositories() {
 		return repositories;
 	}
 
 	public final void addRepository(final Repository repository) {
 		this.repositories.put(repository.getId(), repository);
-	}
-
-	public final int getBatch() {
-		return batch;
-	}
-
-	public final void setBatch(int batch) {
-		this.batch = batch;
-	}
-
-	public final int getThreads() {
-		return threads;
-	}
-
-	public final void setThreads(int threads) {
-		this.threads = threads;
 	}
 
 	public final int getPort() {
