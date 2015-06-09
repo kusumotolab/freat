@@ -2,6 +2,7 @@ package jp.ac.osaka_u.ist.sdl.freat.servlet;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
@@ -9,6 +10,10 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import jp.ac.osaka_u.ist.sdl.ectec.db.data.DBCodeFragmentGenealogyInfo;
+import jp.ac.osaka_u.ist.sdl.ectec.db.data.DBCodeFragmentInfo;
+import jp.ac.osaka_u.ist.sdl.ectec.db.data.DBCodeFragmentLinkInfo;
 
 import com.google.gson.Gson;
 
@@ -28,12 +33,21 @@ public class DataServlet extends HttpServlet {
 			System.err.println("failed to convert " + param + " to Long");
 			return;
 		}
+		
+		System.out.println("start retrieving genealogy " + id);
 
 		try {
+			final DBCodeFragmentGenealogyInfo genealogy = Manager.getInstance()
+					.getFragmentGenealogy(id);
+			final Map<Long, DBCodeFragmentInfo> fragments = Manager
+					.getInstance().getFragments(genealogy.getElements());
+			final Map<Long, DBCodeFragmentLinkInfo> fragmentLinks = Manager
+					.getInstance().getFragmentLinks(genealogy.getLinks());
+
 			Gson gson = new Gson();
-			String output = gson.toJson(Manager.getInstance()
-					.getFragmentGenealogy(id));
-			
+			String output = gson.toJson(Converter.toGraph(genealogy, fragments,
+					fragmentLinks));
+
 			System.out.println(output);
 
 			out.write(output.getBytes());
