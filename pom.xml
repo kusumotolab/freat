@@ -9,6 +9,12 @@
 	<properties>
 		<tomcat.version>7.0.57</tomcat.version>
 	</properties>
+	<repositories>
+		<repository>
+			<id>freat-local-repo</id>
+			<url>file:///${basedir}/freat-local</url>
+		</repository>
+	</repositories>
 	<dependencies>
 		<dependency>
 			<groupId>org.apache.tomcat.embed</groupId>
@@ -55,8 +61,6 @@
 			<groupId>jp.ac.osaka_u.ist.sdl</groupId>
 			<artifactId>ectec</artifactId>
 			<version>150603</version>
-			<scope>system</scope>
-			<systemPath>${basedir}/lib/ECTEC-ver150603.jar</systemPath>
 		</dependency>
 	</dependencies>
 	<build>
@@ -77,13 +81,16 @@
 				<artifactId>appassembler-maven-plugin</artifactId>
 				<version>1.1.1</version>
 				<configuration>
+					<repositoryName>lib</repositoryName>
+					<repositoryLayout>flat</repositoryLayout>
 					<assembleDirectory>target</assembleDirectory>
 					<programs>
 						<program>
-							<mainClass>launch.Main</mainClass>
+							<mainClass>jp.ac.osaka_u.ist.sdl.freat.launch.Launcher</mainClass>
 							<name>webapp</name>
 						</program>
 					</programs>
+					<repoPath>${basedir}/lib/</repoPath>
 				</configuration>
 				<executions>
 					<execution>

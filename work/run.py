@@ -65,7 +65,7 @@ if __name__ == "__main__":
 	run_prepare_ectec(config, "6-fragmentdetector.jar")
 	run_prepare_ectec(config, "7-clonedetector.jar")
 	run_prepare_ectec(config, "8-linker.jar")
-	#run_prepare_ectec(config, "9-brancher.jar")
-	#run_prepare_ectec(config, "10-genealogydetector.jar")
+	run_prepare_ectec(config, "9-brancher.jar")
+	run_prepare_ectec(config, "10-genealogydetector.jar")
 
 	
