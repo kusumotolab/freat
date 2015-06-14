@@ -2,7 +2,9 @@ package jp.ac.osaka_u.ist.sdl.freat.servlet;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
@@ -11,6 +13,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import jp.ac.osaka_u.ist.sdl.ectec.db.data.DBCloneGenealogyInfo;
+import jp.ac.osaka_u.ist.sdl.ectec.db.data.DBCloneSetInfo;
+import jp.ac.osaka_u.ist.sdl.ectec.db.data.DBCloneSetLinkInfo;
 import jp.ac.osaka_u.ist.sdl.ectec.db.data.DBCodeFragmentGenealogyInfo;
 import jp.ac.osaka_u.ist.sdl.ectec.db.data.DBCodeFragmentInfo;
 import jp.ac.osaka_u.ist.sdl.ectec.db.data.DBCodeFragmentLinkInfo;
@@ -33,20 +38,20 @@ public class DataServlet extends HttpServlet {
 			System.err.println("failed to convert " + param + " to Long");
 			return;
 		}
-		
+
 		System.out.println("start retrieving genealogy " + id);
 
 		try {
-			final DBCodeFragmentGenealogyInfo genealogy = Manager.getInstance()
-					.getFragmentGenealogy(id);
-			final Map<Long, DBCodeFragmentInfo> fragments = Manager
-					.getInstance().getFragments(genealogy.getElements());
-			final Map<Long, DBCodeFragmentLinkInfo> fragmentLinks = Manager
-					.getInstance().getFragmentLinks(genealogy.getLinks());
+			final Map<String, Object> outputData = processCloneGenealogy(id);
+
+			if (outputData == null) {
+				System.err.println("cannot convert clone genealogy " + id
+						+ " to a graph");
+				return;
+			}
 
 			Gson gson = new Gson();
-			String output = gson.toJson(Converter.toGraph(genealogy, fragments,
-					fragmentLinks));
+			String output = gson.toJson(outputData);
 
 			System.out.println(output);
 
@@ -57,6 +62,51 @@ public class DataServlet extends HttpServlet {
 			System.err.println("failed to get genealogy");
 			return;
 		}
+	}
+
+	private Map<String, Object> processCloneGenealogy(long id)
+			throws SQLException {
+		final DBCloneGenealogyInfo genealogy = Manager.getInstance()
+				.getCloneGenealogy(id);
+
+		if (genealogy == null) {
+			return null;
+		}
+
+		final Map<Long, DBCloneSetInfo> clones = Manager.getInstance()
+				.getClones(genealogy.getElements());
+
+		final Set<Long> fragmentIds = new HashSet<Long>();
+		for (final DBCloneSetInfo clone : clones.values()) {
+			fragmentIds.addAll(clone.getElements());
+		}
+
+		final long cloneGenealogyStartRevId = genealogy
+				.getStartCombinedRevisionId();
+		final Map<Long, DBCodeFragmentGenealogyInfo> fragmentGenealogies = Manager
+				.getInstance().getFragmentGenealogiesWithFragmentIds(
+						fragmentIds);
+
+		for (final DBCodeFragmentGenealogyInfo fragmentGenealogy : fragmentGenealogies
+				.values()) {
+			fragmentIds.addAll(fragmentGenealogy.getElements());
+		}
+
+		final Map<Long, DBCodeFragmentInfo> fragments = Manager.getInstance()
+				.getFragments(fragmentIds);
+
+		final Set<Long> fragmentLinkIds = new HashSet<Long>();
+		for (final DBCodeFragmentGenealogyInfo fragmentGenealogy : fragmentGenealogies
+				.values()) {
+			fragmentLinkIds.addAll(fragmentGenealogy.getLinks());
+		}
+
+		final Map<Long, DBCodeFragmentLinkInfo> fragmentLinks = Manager
+				.getInstance().getFragmentLinks(fragmentLinkIds);
+
+		return Converter.fragmentGenealogiesToGraphData(
+				cloneGenealogyStartRevId, fragmentGenealogies, fragments,
+				Manager.getInstance().getRepositoryIndexes());
 	}
 
 }

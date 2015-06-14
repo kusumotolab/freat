@@ -48,5 +48,6 @@ public class Launcher {
 
 		final Manager manager = Manager.getInstance();
 		manager.setDBManager(dbManager);
+		manager.setRepositoryIndexes();
 	}
 }

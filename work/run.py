@@ -19,7 +19,9 @@ def run_prepare_ectec(config, jar_name):
 	
 	if jar_name == "2-repositoryregisterer.jar":
 		command = ["java", "-jar", mem_str, jar_name, "-d", db_path, "-th", threads, "-i", csv_file]
-	elif jar_name == "10-genealogydetector.jar":
+	elif jar_name == "10-clonegenealogydetector.jar":
+		command = ["java", "-jar", mem_str, jar_name, "-d", db_path, "-th", threads, "-gm", "c"]
+	elif jar_name == "11-fragmentgenealogydetector.jar":
 		command = ["java", "-jar", mem_str, jar_name, "-d", db_path, "-th", threads, "-gm", "f"]
 	else:
 		command = ["java", "-jar", mem_str, jar_name, "-d", db_path, "-th", threads]
@@ -64,8 +66,7 @@ if __name__ == "__main__":
 	run_prepare_ectec(config, "5-filedetector.jar")
 	run_prepare_ectec(config, "6-fragmentdetector.jar")
 	run_prepare_ectec(config, "7-clonedetector.jar")
-	run_prepare_ectec(config, "8-linker.jar")
-	run_prepare_ectec(config, "9-brancher.jar")
-	run_prepare_ectec(config, "10-genealogydetector.jar")
-
-	
+	run_prepare_ectec(config, "8-fragmentlinker.jar")
+	run_prepare_ectec(config, "9-clonelinker.jar")
+	run_prepare_ectec(config, "10-clonegenealogydetector.jar")
+	run_prepare_ectec(config, "11-fragmentgenealogydetector.jar")
