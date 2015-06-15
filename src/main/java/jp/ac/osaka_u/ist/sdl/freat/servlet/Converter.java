@@ -9,10 +9,26 @@ import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import jp.ac.osaka_u.ist.sdl.ectec.db.data.DBCloneGenealogyInfo;
 import jp.ac.osaka_u.ist.sdl.ectec.db.data.DBCodeFragmentGenealogyInfo;
 import jp.ac.osaka_u.ist.sdl.ectec.db.data.DBCodeFragmentInfo;
 
 public class Converter {
+
+	public static Map<String, Object> cloneGenelogiesToTableData(
+			final Map<Long, DBCloneGenealogyInfo> genealogies) {
+		final List<GenealogyData> genealogyData = new ArrayList<GenealogyData>();
+		for (final DBCloneGenealogyInfo genealogy : genealogies.values()) {
+			final GenealogyData gd = new GenealogyData(genealogy.getId(),
+					genealogy.getStartCombinedRevisionId(),
+					genealogy.getEndCombinedRevisionId());
+			genealogyData.add(gd);
+		}
+		
+		final Map<String, Object> data = new HashMap<String, Object>();
+		data.put("genealogies", genealogyData);
+		return data;
+	}
 
 	public static Map<String, Object> fragmentGenealogiesToGraphData(
 			final long startCombinedRevId,
@@ -25,12 +41,39 @@ public class Converter {
 		final List<GraphNode> nodes = findNodes(genealogies, fragments,
 				targetRevs, repositoryIndexes);
 
+		final List<GraphLink> links = findLinks(nodes);
+
 		final Map<String, Object> data = new HashMap<String, Object>();
 		data.put("nodes", nodes);
+		data.put("links", links);
 		data.put("revs", targetRevs.size());
 		data.put("lines", genealogies.size());
-		
+
 		return data;
+	}
+
+	private static List<GraphLink> findLinks(final List<GraphNode> nodes) {
+		final List<GraphLink> links = new ArrayList<GraphLink>();
+		GraphNode currentNode = null;
+
+		for (int i = 0; i < nodes.size(); i++) {
+			final GraphNode node = nodes.get(i);
+
+			if (currentNode != null
+					&& currentNode.getGenealogyId() == node.getGenealogyId()) {
+				final GraphLink link = new GraphLink();
+				link.setBeforeX(currentNode.getxIndex());
+				link.setBeforeY(currentNode.getyIndex());
+				link.setAfterX(node.getxIndex());
+				link.setAfterY(node.getyIndex());
+				link.setChanged(currentNode.getHash() != node.getHash());
+				links.add(link);
+			}
+
+			currentNode = node;
+		}
+
+		return links;
 	}
 
 	private static List<GraphNode> findNodes(
@@ -82,10 +125,10 @@ public class Converter {
 						.getOwnerRepositoryId()));
 
 				nodes.add(node);
-				
+
 				revisionIndex++;
 			}
-			
+
 			genealogyIndex++;
 		}
 		return nodes;
