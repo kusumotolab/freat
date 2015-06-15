@@ -4,6 +4,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -137,8 +138,14 @@ public class Manager {
 		final Map<Long, DBCodeFragmentGenealogyElementInfo> elements = dbManager
 				.getFragmentGenealogyElementRetriever().retrieve(
 						builder.toString());
+		
+		final Set<Long> fragmentGenealogyIds = new HashSet<Long>();
+		for (final DBCodeFragmentGenealogyElementInfo element : elements.values()) {
+			fragmentGenealogyIds.add(element.getMainElementId());
+		}
+		
 		return dbManager.getFragmentGenealogyRetriever().retrieveWithIds(
-				elements.keySet());
+				fragmentGenealogyIds);
 	}
 
 }

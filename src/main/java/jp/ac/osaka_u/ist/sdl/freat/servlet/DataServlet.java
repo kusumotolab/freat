@@ -64,7 +64,7 @@ public class DataServlet extends HttpServlet {
 		}
 	}
 
-	private Map<String, Object> processCloneGenealogy(long id)
+	public Map<String, Object> processCloneGenealogy(long id)
 			throws SQLException {
 		final DBCloneGenealogyInfo genealogy = Manager.getInstance()
 				.getCloneGenealogy(id);

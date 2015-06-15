@@ -48,7 +48,9 @@ function loadTable() {
 }
 
 function clickRow(idstr) {
-	<!-- d3.select("#textContainer").selectAll("*").remove(); -->
-	d3.select("#textContainer").append("p").text("genealogy id: " + idstr);
+	/*
+	 d3.select("#textContainer").selectAll("*").remove();
+	 d3.select("#textContainer").append("p").text("genealogy id: " + idstr);
+	 */
 	load(idstr);
 }
