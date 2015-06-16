@@ -18,12 +18,17 @@ import jp.ac.osaka_u.ist.sdl.ectec.db.data.DBCodeFragmentGenealogyElementInfo;
 import jp.ac.osaka_u.ist.sdl.ectec.db.data.DBCodeFragmentGenealogyInfo;
 import jp.ac.osaka_u.ist.sdl.ectec.db.data.DBCodeFragmentInfo;
 import jp.ac.osaka_u.ist.sdl.ectec.db.data.DBCodeFragmentLinkInfo;
+import jp.ac.osaka_u.ist.sdl.ectec.db.data.DBFileInfo;
+import jp.ac.osaka_u.ist.sdl.ectec.db.data.DBRepositoryInfo;
+import jp.ac.osaka_u.ist.sdl.ectec.vcs.RepositoryManagerManager;
 
 public class Manager {
 
 	private static Manager SINGLETON = null;
 
 	private DBConnectionManager dbManager;
+
+	private RepositoryManagerManager repositoryManagerManager;
 
 	private final Map<Long, Integer> repositoryIndexes;
 
@@ -33,6 +38,11 @@ public class Manager {
 
 	public void setDBManager(final DBConnectionManager dbManager) {
 		this.dbManager = dbManager;
+	}
+
+	public void setRepositoryManagerManager(
+			final RepositoryManagerManager repositoryManagerManager) {
+		this.repositoryManagerManager = repositoryManagerManager;
 	}
 
 	public void setRepositoryIndexes() throws SQLException {
@@ -51,6 +61,10 @@ public class Manager {
 
 	public DBConnectionManager getDBManager() {
 		return dbManager;
+	}
+
+	public RepositoryManagerManager getRepositoryManagerManager() {
+		return repositoryManagerManager;
 	}
 
 	public static Manager getInstance() {
@@ -138,14 +152,21 @@ public class Manager {
 		final Map<Long, DBCodeFragmentGenealogyElementInfo> elements = dbManager
 				.getFragmentGenealogyElementRetriever().retrieve(
 						builder.toString());
-		
+
 		final Set<Long> fragmentGenealogyIds = new HashSet<Long>();
-		for (final DBCodeFragmentGenealogyElementInfo element : elements.values()) {
+		for (final DBCodeFragmentGenealogyElementInfo element : elements
+				.values()) {
 			fragmentGenealogyIds.add(element.getMainElementId());
 		}
-		
+
 		return dbManager.getFragmentGenealogyRetriever().retrieveWithIds(
 				fragmentGenealogyIds);
+	}
+
+	public synchronized String getSrc(final DBRepositoryInfo repository,
+			final DBFileInfo file, final String revIdentifier) throws Exception {
+		return repositoryManagerManager.getRepositoryManager(repository.getId())
+				.getFileContents(revIdentifier, file.getPath());
 	}
 
 }

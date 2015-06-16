@@ -1,50 +1,78 @@
 <!DOCTYPE html>
-<meta charset="utf-8">
-<style>
-	.node {
-		stroke: #fff;
-		stroke-width: 1.5px;
-	}
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<title>Freat: Fragment Evolution Analyzing Tool</title>
+		<script type="text/javascript" src="syntaxhighlighter/scripts/shCore.js"></script>
+		<script type="text/javascript" src="syntaxhighlighter/scripts/shBrushJava.js"></script>
+		<link type="text/css" rel="stylesheet" href="syntaxhighlighter/styles/shCoreDefault.css"/>
+		<script type="text/javascript">
+			SyntaxHighlighter.all();
+		</script>
 
-	.link {
-		stroke: #999;
-		stroke-opacity: .6;
-	}
+		<style>
+			.node {
+				stroke: #fff;
+				stroke-width: 1.5px;
+			}
 
-	.gtable {
-		float: left;
-		height: 600px;
-		width: 200px;
-		overflow-y: auto;
-		margin: 10px 5px 0px 10px;
-	}
+			.link {
+				stroke: #999;
+				stroke-opacity: .6;
+			}
 
-	.tcontainer {
-		height: 100px;
-		width: 100px;
-		padding: 15px 10px 10px 5px;
-		margin: 5px;
-	}
-	
-	.gcontainer {
-		height: 350px;
-		width: 1050px;
-		padding: 5px;
-		margin: 5px;
-		float: left;
-		border: 2px;
-		border-style: solid;
-		border-color: black;
-	}
+			.gtable {
+				float: left;
+				height: 600px;
+				width: 200px;
+				overflow-y: auto;
+				margin: 10px 5px 0px 10px;
+			}
 
-</style>
-<body>
-	<div id="genealogyTable" class="gtable"></div>
-	<!-- <div id="textContainer" class="tcontainer"></div> -->
-	<div id="graphContainer" class="gcontainer"></div>
+			.tcontainer {
+				height: 100px;
+				width: 100px;
+				padding: 15px 10px 10px 5px;
+				margin: 5px;
+			}
 
-	<script src="http://d3js.org/d3.v3.min.js"></script>
-	<script type="text/javascript" src="showtable.js"></script>
-	<script type="text/javascript" src="showgraph.js"></script>
+			.gcontainer {
+				height: 350px;
+				width: 1050px;
+				padding: 5px;
+				margin: 5px;
+				float: left;
+				border: 2px;
+				border-style: solid;
+				border-color: black;
+			}
+			
+			.scontainer {
+				height: 350px;
+				width: 513px;
+				padding: 5px;
+				margin: 5px;
+				border: 2px;
+				border-style: solid;
+				border-color: black;
+				float: left;
+			}
 
-</body>
+		</style>
+	</head>
+
+	<body>
+		<h2>Welcome to Freat</h2>	
+
+ 		<div id="genealogyTable" class="gtable"></div>
+		<!-- <div id="textContainer" class="tcontainer"></div> -->
+		<div id="graphContainer" class="gcontainer"></div>
+		<div id="sourceContainerLeft" class="scontainer"></div>
+		<div id="sourceContainerRight" class="scontainer"></div>
+
+		<script src="http://d3js.org/d3.v3.min.js"></script>
+		<script type="text/javascript" src="showtable.js"></script>
+		<script type="text/javascript" src="showgraph.js"></script>
+		<script type="text/javascript" src="showsrc.js"></script>
+	</body>
+</html>

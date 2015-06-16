@@ -1,10 +1,14 @@
 package jp.ac.osaka_u.ist.sdl.freat.launch;
 
 import java.io.File;
+import java.util.Map;
 
 import jp.ac.osaka_u.ist.sdl.ectec.db.DBConnectionManager;
 import jp.ac.osaka_u.ist.sdl.ectec.db.IDBConfig;
 import jp.ac.osaka_u.ist.sdl.ectec.db.SQLiteDBConfig;
+import jp.ac.osaka_u.ist.sdl.ectec.db.data.DBRepositoryInfo;
+import jp.ac.osaka_u.ist.sdl.ectec.main.IllegalStateException;
+import jp.ac.osaka_u.ist.sdl.ectec.vcs.RepositoryManagerManager;
 import jp.ac.osaka_u.ist.sdl.freat.servlet.Manager;
 
 import org.apache.catalina.startup.Tomcat;
@@ -49,5 +53,27 @@ public class Launcher {
 		final Manager manager = Manager.getInstance();
 		manager.setDBManager(dbManager);
 		manager.setRepositoryIndexes();
+		
+		// initialize the manager of repository managers
+		RepositoryManagerManager repositoryManagerManager = new RepositoryManagerManager();
+		manager.setRepositoryManagerManager(repositoryManagerManager);
+
+		final Map<Long, DBRepositoryInfo> registeredRepositories = dbManager
+				.getRepositoryRetriever().retrieveAll();
+		if (registeredRepositories.isEmpty()) {
+			throw new IllegalStateException(
+					"cannot retrieve any repositories from db");
+		}
+
+		for (final Map.Entry<Long, DBRepositoryInfo> entry : registeredRepositories
+				.entrySet()) {
+			final DBRepositoryInfo repository = entry.getValue();
+
+			try {
+				repositoryManagerManager.addRepositoryManager(repository);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 	}
 }
