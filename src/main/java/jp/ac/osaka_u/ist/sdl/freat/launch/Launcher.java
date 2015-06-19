@@ -52,7 +52,6 @@ public class Launcher {
 
 		final Manager manager = Manager.getInstance();
 		manager.setDBManager(dbManager);
-		manager.setRepositoryIndexes();
 		
 		// initialize the manager of repository managers
 		RepositoryManagerManager repositoryManagerManager = new RepositoryManagerManager();
@@ -75,5 +74,7 @@ public class Launcher {
 				e.printStackTrace();
 			}
 		}
+		
+		manager.setRepositoryData(registeredRepositories);
 	}
 }

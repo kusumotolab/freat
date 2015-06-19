@@ -17,8 +17,8 @@ public class DataServletTest {
 		final DataServlet ds = new DataServlet();
 		ds.processCloneGenealogy((long) 1);
 
-//		final SrcServlet ss = new SrcServlet();
-//		ss.processFragment((long) 6649);
+		// final SrcServlet ss = new SrcServlet();
+		// ss.processFragment((long) 6649);
 
 		Manager.getInstance().getDBManager().close();
 	}
@@ -30,7 +30,8 @@ public class DataServletTest {
 
 		final Manager manager = Manager.getInstance();
 		manager.setDBManager(dbManager);
-		manager.setRepositoryIndexes();
+		manager.setRepositoryData(dbManager.getRepositoryRetriever()
+				.retrieveAll());
 
 		// initialize the manager of repository managers
 		RepositoryManagerManager repositoryManagerManager = new RepositoryManagerManager();

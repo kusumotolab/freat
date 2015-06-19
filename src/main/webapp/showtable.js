@@ -26,7 +26,7 @@ function loadTable() {
 	});
 
 	d3.json("/tabledata", function(err, data) {
-		var tr_td = tbody.selectAll("tr").data(data.genealogies).enter().append("tr").style("background-color", "rgb(255, 255, 255)").attr("id", function(d) {
+		var tr_td = tbody.selectAll("tr").data(data.genealogies).enter().append("tr").style("background-color", "rgba(255, 255, 255, 0.75)").attr("id", function(d) {
 			return d.id;
 		});
 		var td = tr_td.selectAll("td").data(function(d) {
@@ -37,7 +37,7 @@ function loadTable() {
 		tr_td.on("mouseover", function() {
 			d3.select(this).style("background-color", "rgba(0, 100, 0, 0.2)");
 		}).on("mouseout", function() {
-			d3.select(this).style("background-color", "rgb(255, 255, 255)");
+			d3.select(this).style("background-color", "rgba(255, 255, 255, 0.7)");
 		}).on("click", function(d) {
 			var idstr = d3.select(this).select("td").text();
 			load(idstr);

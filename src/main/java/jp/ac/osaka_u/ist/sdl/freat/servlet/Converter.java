@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
@@ -13,6 +15,10 @@ import java.util.TreeSet;
 import jp.ac.osaka_u.ist.sdl.ectec.db.data.DBCloneGenealogyInfo;
 import jp.ac.osaka_u.ist.sdl.ectec.db.data.DBCodeFragmentGenealogyInfo;
 import jp.ac.osaka_u.ist.sdl.ectec.db.data.DBCodeFragmentInfo;
+import jp.ac.osaka_u.ist.sdl.ectec.db.data.DBCombinedRevisionInfo;
+import jp.ac.osaka_u.ist.sdl.ectec.db.data.DBFileInfo;
+import jp.ac.osaka_u.ist.sdl.ectec.db.data.DBRepositoryInfo;
+import jp.ac.osaka_u.ist.sdl.ectec.db.data.DBRevisionInfo;
 
 public class Converter {
 
@@ -35,12 +41,28 @@ public class Converter {
 			final long startCombinedRevId,
 			final Map<Long, DBCodeFragmentGenealogyInfo> genealogies,
 			final Map<Long, DBCodeFragmentInfo> fragments,
-			final Map<Long, Integer> repositoryIndexes) {
+			final Map<Long, Integer> repositoryIndexes,
+			final Map<Long, DBRepositoryInfo> repositories,
+			final Map<Long, DBFileInfo> files) throws Exception {
 		final SortedSet<Long> targetRevs = findTargetRevisions(
 				startCombinedRevId, genealogies, fragments);
 
+		final Map<Long, DBCombinedRevisionInfo> combinedRevisions = Manager
+				.getInstance().getDBManager().getCombinedRevisionRetriever()
+				.retrieveWithIds(targetRevs);
+
+		final Set<Long> revIds = new HashSet<Long>();
+		for (final DBCombinedRevisionInfo combinedRev : combinedRevisions
+				.values()) {
+			revIds.addAll(combinedRev.getOriginalRevisions());
+		}
+
+		final Map<Long, DBRevisionInfo> revisions = Manager.getInstance()
+				.getDBManager().getRevisionRetriever().retrieveWithIds(revIds);
+
 		final List<GraphNode> nodes = findNodes(genealogies, fragments,
-				targetRevs, repositoryIndexes);
+				targetRevs, combinedRevisions, revisions, repositoryIndexes,
+				repositories, files);
 
 		findClones(nodes);
 
@@ -83,7 +105,7 @@ public class Converter {
 		final Map<Integer, Integer> hashValues = new HashMap<Integer, Integer>();
 		final Map<Long, Map<Integer, List<GraphNode>>> nodesMap = new TreeMap<Long, Map<Integer, List<GraphNode>>>();
 		int hashCount = 1;
-		
+
 		for (final GraphNode node : nodes) {
 			if (!nodesMap.containsKey(node.getCombinedRevId())) {
 				nodesMap.put(node.getCombinedRevId(),
@@ -96,7 +118,7 @@ public class Converter {
 				nodesInRev.put(node.getHash(), new ArrayList<GraphNode>());
 			}
 			nodesInRev.get(node.getHash()).add(node);
-			
+
 			if (!hashValues.containsKey(node.getHash())) {
 				hashValues.put(node.getHash(), hashCount++);
 			}
@@ -124,7 +146,11 @@ public class Converter {
 			final Map<Long, DBCodeFragmentGenealogyInfo> genealogies,
 			final Map<Long, DBCodeFragmentInfo> fragments,
 			final SortedSet<Long> targetRevs,
-			final Map<Long, Integer> repositoryIndexes) {
+			final Map<Long, DBCombinedRevisionInfo> combinedRevisions,
+			final Map<Long, DBRevisionInfo> revisions,
+			final Map<Long, Integer> repositoryIndexes,
+			final Map<Long, DBRepositoryInfo> repositories,
+			final Map<Long, DBFileInfo> files) {
 		final List<GraphNode> nodes = new ArrayList<GraphNode>();
 
 		int genealogyIndex = 0;
@@ -167,6 +193,28 @@ public class Converter {
 				node.setxIndex(revisionIndex);
 				node.setRepoIndex(repositoryIndexes.get(currentFragment
 						.getOwnerRepositoryId()));
+				node.setRepoName(repositories.get(
+						currentFragment.getOwnerRepositoryId()).getName());
+				node.setStartLine(currentFragment.getStartLine());
+				node.setEndLine(currentFragment.getEndLine());
+				node.setPath(files.get(currentFragment.getOwnerFileId())
+						.getPath());
+
+				final List<Long> candidateRevIds = combinedRevisions.get(
+						combinedRevId).getOriginalRevisions();
+				DBRevisionInfo rev = null;
+				for (final long candidateRevId : candidateRevIds) {
+					DBRevisionInfo candidate = revisions.get(candidateRevId);
+					if (candidate.getRepositoryId() == currentFragment
+							.getOwnerRepositoryId()) {
+						rev = candidate;
+						break;
+					}
+				}
+
+				if (rev != null) {
+					node.setRev(rev.getIdentifier());
+				}
 
 				nodes.add(node);
 

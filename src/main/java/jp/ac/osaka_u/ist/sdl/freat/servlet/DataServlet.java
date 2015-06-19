@@ -15,10 +15,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import jp.ac.osaka_u.ist.sdl.ectec.db.data.DBCloneGenealogyInfo;
 import jp.ac.osaka_u.ist.sdl.ectec.db.data.DBCloneSetInfo;
-import jp.ac.osaka_u.ist.sdl.ectec.db.data.DBCloneSetLinkInfo;
 import jp.ac.osaka_u.ist.sdl.ectec.db.data.DBCodeFragmentGenealogyInfo;
 import jp.ac.osaka_u.ist.sdl.ectec.db.data.DBCodeFragmentInfo;
 import jp.ac.osaka_u.ist.sdl.ectec.db.data.DBCodeFragmentLinkInfo;
+import jp.ac.osaka_u.ist.sdl.ectec.db.data.DBFileInfo;
 
 import com.google.gson.Gson;
 
@@ -58,14 +58,14 @@ public class DataServlet extends HttpServlet {
 			out.write(output.getBytes());
 			out.flush();
 			out.close();
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			System.err.println("failed to get genealogy");
 			return;
 		}
 	}
 
 	public Map<String, Object> processCloneGenealogy(long id)
-			throws SQLException {
+			throws Exception {
 		final DBCloneGenealogyInfo genealogy = Manager.getInstance()
 				.getCloneGenealogy(id);
 
@@ -104,9 +104,18 @@ public class DataServlet extends HttpServlet {
 		final Map<Long, DBCodeFragmentLinkInfo> fragmentLinks = Manager
 				.getInstance().getFragmentLinks(fragmentLinkIds);
 
+		final Set<Long> fileIds = new HashSet<Long>();
+		for (final DBCodeFragmentInfo fragment : fragments.values()) {
+			fileIds.add(fragment.getOwnerFileId());
+		}
+
+		final Map<Long, DBFileInfo> files = Manager.getInstance()
+				.getDBManager().getFileRetriever().retrieveWithIds(fileIds);
+
 		return Converter.fragmentGenealogiesToGraphData(
 				cloneGenealogyStartRevId, fragmentGenealogies, fragments,
-				Manager.getInstance().getRepositoryIndexes());
+				Manager.getInstance().getRepositoryIndexes(), Manager
+						.getInstance().getRepositories(), files);
 	}
 
 }

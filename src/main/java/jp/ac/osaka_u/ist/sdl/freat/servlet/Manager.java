@@ -32,8 +32,11 @@ public class Manager {
 
 	private final Map<Long, Integer> repositoryIndexes;
 
+	private final Map<Long, DBRepositoryInfo> repositories;
+
 	private Manager() {
 		this.repositoryIndexes = new TreeMap<Long, Integer>();
+		this.repositories = new TreeMap<Long, DBRepositoryInfo>();
 	}
 
 	public void setDBManager(final DBConnectionManager dbManager) {
@@ -45,11 +48,11 @@ public class Manager {
 		this.repositoryManagerManager = repositoryManagerManager;
 	}
 
-	public void setRepositoryIndexes() throws SQLException {
+	public void setRepositoryData(final Map<Long, DBRepositoryInfo> repositories)
+			throws SQLException {
 		assert this.dbManager != null;
 
-		final Set<Long> repoIds = dbManager.getRepositoryRetriever()
-				.retrieveAll().keySet();
+		final Set<Long> repoIds = repositories.keySet();
 		final List<Long> repoIdsList = new ArrayList<Long>(repoIds);
 		Collections.sort(repoIdsList);
 
@@ -57,6 +60,8 @@ public class Manager {
 		for (final long id : repoIdsList) {
 			this.repositoryIndexes.put(id, count++);
 		}
+
+		this.repositories.putAll(repositories);
 	}
 
 	public DBConnectionManager getDBManager() {
@@ -77,6 +82,10 @@ public class Manager {
 
 	public synchronized Map<Long, Integer> getRepositoryIndexes() {
 		return Collections.unmodifiableMap(repositoryIndexes);
+	}
+
+	public synchronized Map<Long, DBRepositoryInfo> getRepositories() {
+		return Collections.unmodifiableMap(this.repositories);
 	}
 
 	public synchronized DBCodeFragmentGenealogyInfo getFragmentGenealogy(
@@ -165,8 +174,9 @@ public class Manager {
 
 	public synchronized String getSrc(final DBRepositoryInfo repository,
 			final DBFileInfo file, final String revIdentifier) throws Exception {
-		return repositoryManagerManager.getRepositoryManager(repository.getId())
-				.getFileContents(revIdentifier, file.getPath());
+		return repositoryManagerManager
+				.getRepositoryManager(repository.getId()).getFileContents(
+						revIdentifier, file.getPath());
 	}
 
 }

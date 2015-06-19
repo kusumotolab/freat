@@ -17,6 +17,16 @@ public class GraphNode {
 	private int repoIndex;
 
 	private int inClone;
+	
+	private String path;
+	
+	private int startLine;
+	
+	private int endLine;
+	
+	private String repoName;
+	
+	private String rev;
 
 	public final long getGenealogyId() {
 		return genealogyId;
@@ -80,6 +90,46 @@ public class GraphNode {
 
 	public final void setInClone(int inClone) {
 		this.inClone = inClone;
+	}
+
+	public final String getPath() {
+		return path;
+	}
+
+	public final void setPath(String path) {
+		this.path = path;
+	}
+
+	public final int getStartLine() {
+		return startLine;
+	}
+
+	public final void setStartLine(int startLine) {
+		this.startLine = startLine;
+	}
+
+	public final int getEndLine() {
+		return endLine;
+	}
+
+	public final void setEndLine(int endLine) {
+		this.endLine = endLine;
+	}
+
+	public final String getRepoName() {
+		return repoName;
+	}
+
+	public final void setRepoName(String repoName) {
+		this.repoName = repoName;
+	}
+
+	public final String getRev() {
+		return rev;
+	}
+
+	public final void setRev(String rev) {
+		this.rev = rev;
 	}
 
 }

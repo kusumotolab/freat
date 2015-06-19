@@ -17,6 +17,7 @@ function calcY(yIndex, lines, h) {
 
 function load(id) {
 	d3.select("#graphContainer").selectAll("*").remove();
+	d3.select("#graphContainer").style("background-color", "rgba(255, 255, 255, 0.7)");
 	width = window.innerWidth * 0.7;
 	height = window.innerHeight * 0.4;
 
@@ -25,7 +26,7 @@ function load(id) {
 		var h = Math.max(height, minH);
 
 		var svg = d3.select("#graphContainer").append("svg").attr("width", w).attr("height", h);
-		svg.append("rect").attr("fill", "white").attr("width", w - 2).attr("height", h - 2);
+		//svg.append("rect").attr("fill", "rgba(255, 255, 255, 0.7)").attr("width", w - 2).attr("height", h - 2);
 		svg.append("text").text("genealogy id: " + id).attr("x", 10).attr("y", 20);
 
 		svg.selectAll("line").data(data.links).enter().append("line").attr("class", "link").attr("x1", function(d) {
