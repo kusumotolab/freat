@@ -16,6 +16,8 @@ public class GraphNode {
 
 	private int repoIndex;
 
+	private int inClone;
+
 	public final long getGenealogyId() {
 		return genealogyId;
 	}
@@ -70,6 +72,14 @@ public class GraphNode {
 
 	public final void setRepoIndex(int repoIndex) {
 		this.repoIndex = repoIndex;
+	}
+
+	public final int getInClone() {
+		return inClone;
+	}
+
+	public final void setInClone(int inClone) {
+		this.inClone = inClone;
 	}
 
 }

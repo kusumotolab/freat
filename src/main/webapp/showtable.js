@@ -1,12 +1,23 @@
-var w = 1000, h = 300;
+var width = 1000, height = 300;
 var mt = 20, mb = 20, ml = 10, mr = 10;
+var minW = 50, minH = 100;
 
 var headerData = ["id", "start", "end", "revs"];
 
 loadTable();
 
 function loadTable() {
-	var table = d3.select("#genealogyTable").append("table");
+	width = window.innerWidth * 0.25;
+	height = window.innerHeight * 0.95;
+	var w = Math.max(width, minW);
+	var h = Math.max(height, minH);
+
+	d3.select("#genealogyTable").style({
+		"width": w + "px",
+		"height": h + "px"
+	});
+
+	var table = d3.select("#genealogyTable").append("table").attr("class", "bordered");
 	var thead = table.append("thead");
 	var tbody = table.append("tbody");
 
@@ -15,20 +26,7 @@ function loadTable() {
 	});
 
 	d3.json("/tabledata", function(err, data) {
-		/*
-		 for (var i = 0; i < data.genealogies.length; i++) {
-		 var tr = tbody.append("tr").attr("id", data.genealogies[i].id);
-		 tr.append("td").text(data.genealogies[i].id);
-		 tr.append("td").text(data.genealogies[i].startRevId);
-		 tr.append("td").text(data.genealogies[i].endRevId);
-		 tr.append("td").text(data.genealogies[i].numRevisions);
-		 tr.on("mouseover", function() {
-		 d3.select("this").attr("fill", "rgb(0, 100, 0, 0.2)");
-		 });
-		 }
-		 */
-
-		var tr_td = tbody.selectAll("tr").data(data.genealogies).enter().append("tr").attr("id", function(d) {
+		var tr_td = tbody.selectAll("tr").data(data.genealogies).enter().append("tr").style("background-color", "rgb(255, 255, 255)").attr("id", function(d) {
 			return d.id;
 		});
 		var td = tr_td.selectAll("td").data(function(d) {
@@ -42,15 +40,8 @@ function loadTable() {
 			d3.select(this).style("background-color", "rgb(255, 255, 255)");
 		}).on("click", function(d) {
 			var idstr = d3.select(this).select("td").text();
-			clickRow(idstr);
+			load(idstr);
 		});
 	});
 }
 
-function clickRow(idstr) {
-	/*
-	 d3.select("#textContainer").selectAll("*").remove();
-	 d3.select("#textContainer").append("p").text("genealogy id: " + idstr);
-	 */
-	load(idstr);
-}

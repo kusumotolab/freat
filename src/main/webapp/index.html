@@ -5,12 +5,18 @@
 		<title>Freat: Fragment Evolution Analyzing Tool</title>
 		<script type="text/javascript" src="syntaxhighlighter/scripts/shCore.js"></script>
 		<script type="text/javascript" src="syntaxhighlighter/scripts/shBrushJava.js"></script>
-		<link type="text/css" rel="stylesheet" href="syntaxhighlighter/styles/shCoreDefault.css"/>
+		<link type="text/css" rel="stylesheet" href="syntaxhighlighter/styles/freat.css"/>
+		<link type="text/css" rel="stylesheet" href="tablestyle.css"/>
 		<script type="text/javascript">
 			SyntaxHighlighter.all();
 		</script>
 
 		<style>
+			body {
+				color: #333;
+				background: url(img/bg.gif) fixed;
+			}
+
 			.node {
 				stroke: #fff;
 				stroke-width: 1.5px;
@@ -23,8 +29,6 @@
 
 			.gtable {
 				float: left;
-				height: 600px;
-				width: 200px;
 				overflow-y: auto;
 				margin: 10px 5px 0px 10px;
 			}
@@ -37,24 +41,15 @@
 			}
 
 			.gcontainer {
-				height: 350px;
-				width: 1050px;
 				padding: 5px;
 				margin: 5px;
 				float: left;
-				border: 2px;
-				border-style: solid;
-				border-color: black;
 			}
-			
+
 			.scontainer {
-				height: 350px;
-				width: 513px;
 				padding: 5px;
 				margin: 5px;
 				border: 2px;
-				border-style: solid;
-				border-color: black;
 				float: left;
 			}
 
@@ -62,17 +57,16 @@
 	</head>
 
 	<body>
-		<h2>Welcome to Freat</h2>	
-
- 		<div id="genealogyTable" class="gtable"></div>
+		<div id="genealogyTable" class="gtable tableContainer"></div>
 		<!-- <div id="textContainer" class="tcontainer"></div> -->
 		<div id="graphContainer" class="gcontainer"></div>
-		<div id="sourceContainerLeft" class="scontainer"></div>
-		<div id="sourceContainerRight" class="scontainer"></div>
+		<div id="sourceContainer" class="scontainer"></div>
 
 		<script src="http://d3js.org/d3.v3.min.js"></script>
+		<script type="text/javascript" src="jquery-2.1.4.min.js"></script>
 		<script type="text/javascript" src="showtable.js"></script>
 		<script type="text/javascript" src="showgraph.js"></script>
 		<script type="text/javascript" src="showsrc.js"></script>
+		<script type="text/javascript" src="stripetable.js"></script>
 	</body>
 </html>

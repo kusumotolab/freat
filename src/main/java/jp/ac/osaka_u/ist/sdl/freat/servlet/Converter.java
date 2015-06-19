@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.SortedSet;
+import java.util.TreeMap;
 import java.util.TreeSet;
 
 import jp.ac.osaka_u.ist.sdl.ectec.db.data.DBCloneGenealogyInfo;
@@ -24,7 +25,7 @@ public class Converter {
 					genealogy.getEndCombinedRevisionId());
 			genealogyData.add(gd);
 		}
-		
+
 		final Map<String, Object> data = new HashMap<String, Object>();
 		data.put("genealogies", genealogyData);
 		return data;
@@ -40,6 +41,8 @@ public class Converter {
 
 		final List<GraphNode> nodes = findNodes(genealogies, fragments,
 				targetRevs, repositoryIndexes);
+
+		findClones(nodes);
 
 		final List<GraphLink> links = findLinks(nodes);
 
@@ -74,6 +77,47 @@ public class Converter {
 		}
 
 		return links;
+	}
+
+	private static void findClones(List<GraphNode> nodes) {
+		final Map<Integer, Integer> hashValues = new HashMap<Integer, Integer>();
+		final Map<Long, Map<Integer, List<GraphNode>>> nodesMap = new TreeMap<Long, Map<Integer, List<GraphNode>>>();
+		int hashCount = 1;
+		
+		for (final GraphNode node : nodes) {
+			if (!nodesMap.containsKey(node.getCombinedRevId())) {
+				nodesMap.put(node.getCombinedRevId(),
+						new TreeMap<Integer, List<GraphNode>>());
+			}
+			final Map<Integer, List<GraphNode>> nodesInRev = nodesMap.get(node
+					.getCombinedRevId());
+
+			if (!nodesInRev.containsKey(node.getHash())) {
+				nodesInRev.put(node.getHash(), new ArrayList<GraphNode>());
+			}
+			nodesInRev.get(node.getHash()).add(node);
+			
+			if (!hashValues.containsKey(node.getHash())) {
+				hashValues.put(node.getHash(), hashCount++);
+			}
+		}
+
+		for (final Map.Entry<Long, Map<Integer, List<GraphNode>>> outerEntry : nodesMap
+				.entrySet()) {
+			for (final Map.Entry<Integer, List<GraphNode>> innerEntry : outerEntry
+					.getValue().entrySet()) {
+				if (innerEntry.getValue().size() > 1) {
+					// in clone
+					for (final GraphNode node : innerEntry.getValue()) {
+						node.setInClone(hashValues.get(node.getHash()));
+					}
+				} else {
+					for (final GraphNode node : innerEntry.getValue()) {
+						node.setInClone(-1);
+					}
+				}
+			}
+		}
 	}
 
 	private static List<GraphNode> findNodes(
@@ -118,7 +162,7 @@ public class Converter {
 				node.setCombinedRevId(combinedRevId);
 				node.setGenealogyId(genealogyId);
 				node.setFragmentId(fragmentId);
-				node.setHash((int) currentFragment.getHash());
+				node.setHash((int) currentFragment.getHashForClone());
 				node.setyIndex(genealogyIndex);
 				node.setxIndex(revisionIndex);
 				node.setRepoIndex(repositoryIndexes.get(currentFragment

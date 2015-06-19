@@ -15,10 +15,10 @@ public class DataServletTest {
 		setup("work/test.db");
 
 		final DataServlet ds = new DataServlet();
-		ds.processCloneGenealogy((long) 48);
+		ds.processCloneGenealogy((long) 1);
 
-		final SrcServlet ss = new SrcServlet();
-		ss.processFragment((long) 6649);
+//		final SrcServlet ss = new SrcServlet();
+//		ss.processFragment((long) 6649);
 
 		Manager.getInstance().getDBManager().close();
 	}

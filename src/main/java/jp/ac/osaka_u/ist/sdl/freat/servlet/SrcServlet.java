@@ -102,6 +102,8 @@ public class SrcServlet extends HttpServlet {
 		final Map<String, Object> data = new HashMap<String, Object>();
 		data.put("repoId", repoId);
 		data.put("fileId", fileId);
+		data.put("filePath", file.getPath());
+		data.put("revision", revision.getIdentifier());
 		data.put("startLine", startLine);
 		data.put("endLine", endLine);
 		data.put("src", src);
