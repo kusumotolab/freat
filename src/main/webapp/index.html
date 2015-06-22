@@ -11,6 +11,8 @@
 			SyntaxHighlighter.all();
 		</script>
 
+		<link href="tipsy.css" rel="stylesheet" />
+
 		<style>
 			body {
 				color: #333;
@@ -23,7 +25,6 @@
 			}
 
 			.link {
-				stroke: #999;
 				stroke-opacity: .6;
 			}
 
@@ -57,16 +58,19 @@
 	</head>
 
 	<body>
+		<input type="text" id="txtPath"/>
+		<input type="button" id="btnSearch" value="search" onclick="loadTable(document.getElementById('txtPath').value)"/>
 		<div id="genealogyTable" class="gtable tableContainer"></div>
 		<!-- <div id="textContainer" class="tcontainer"></div> -->
 		<div id="graphContainer" class="gcontainer"></div>
 		<div id="sourceContainer" class="scontainer"></div>
 
-		<script src="http://d3js.org/d3.v3.min.js"></script>
+		<script src="d3.min.js" charset="utf-8"></script>
 		<script type="text/javascript" src="jquery-2.1.4.min.js"></script>
 		<script type="text/javascript" src="showtable.js"></script>
 		<script type="text/javascript" src="showgraph.js"></script>
 		<script type="text/javascript" src="showsrc.js"></script>
 		<script type="text/javascript" src="stripetable.js"></script>
+		<script src="jquery.tipsy.js"></script>
 	</body>
 </html>

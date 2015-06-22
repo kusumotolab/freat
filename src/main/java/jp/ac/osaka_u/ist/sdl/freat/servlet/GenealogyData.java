@@ -6,20 +6,26 @@ public class GenealogyData {
 
 	private final long startRevId;
 
-	private final long endRevId;
+	private final long cloneEndRevId;
 
-	private final int numRevisions;
+	private final long fragmentEndRevId;
+
+	private final boolean dead;
+
+	private final int numFragments;
+
+	private final int numProjects;
 
 	public GenealogyData(final long id, final long startRevId,
-			final long endRevId) {
+			final long cloneEndRevId, final long fragmentEndRevId,
+			final int numFragments, final int numProjects) {
 		this.id = id;
 		this.startRevId = startRevId;
-		this.endRevId = endRevId;
-		this.numRevisions = (int) (endRevId - startRevId + 1);
-	}
-
-	public final int getNumRevisions() {
-		return numRevisions;
+		this.cloneEndRevId = cloneEndRevId;
+		this.fragmentEndRevId = fragmentEndRevId;
+		this.dead = (this.cloneEndRevId != this.fragmentEndRevId);
+		this.numFragments = numFragments;
+		this.numProjects = numProjects;
 	}
 
 	public final long getStartRevId() {
@@ -27,11 +33,31 @@ public class GenealogyData {
 	}
 
 	public final long getEndRevId() {
-		return endRevId;
+		return cloneEndRevId;
 	}
 
 	public final long getId() {
 		return id;
+	}
+
+	public final long getCloneEndRevId() {
+		return cloneEndRevId;
+	}
+
+	public final long getFragmentEndRevId() {
+		return fragmentEndRevId;
+	}
+
+	public final boolean isDead() {
+		return dead;
+	}
+
+	public final int getNumFragments() {
+		return numFragments;
+	}
+
+	public final int getNumProjects() {
+		return numProjects;
 	}
 
 }

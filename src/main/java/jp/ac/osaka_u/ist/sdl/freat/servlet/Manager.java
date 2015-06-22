@@ -11,6 +11,7 @@ import java.util.Set;
 import java.util.TreeMap;
 
 import jp.ac.osaka_u.ist.sdl.ectec.db.DBConnectionManager;
+import jp.ac.osaka_u.ist.sdl.ectec.db.data.DBCloneGenealogyElementInfo;
 import jp.ac.osaka_u.ist.sdl.ectec.db.data.DBCloneGenealogyInfo;
 import jp.ac.osaka_u.ist.sdl.ectec.db.data.DBCloneSetInfo;
 import jp.ac.osaka_u.ist.sdl.ectec.db.data.DBCloneSetLinkInfo;
@@ -177,6 +178,91 @@ public class Manager {
 		return repositoryManagerManager
 				.getRepositoryManager(repository.getId()).getFileContents(
 						revIdentifier, file.getPath());
+	}
+
+	public synchronized Map<Long, DBFileInfo> getFilesWithPath(final String path)
+			throws Exception {
+		final String tableName = "FILE";
+		final String pathColumn = "FILE_PATH";
+
+		final StringBuilder builder = new StringBuilder();
+		builder.append("select * from " + tableName + " where " + pathColumn
+				+ " like \"%" + path + "%\"");
+
+		final Map<Long, DBFileInfo> elements = dbManager.getFileRetriever()
+				.retrieve(builder.toString());
+
+		return elements;
+	}
+
+	public synchronized Map<Long, DBCodeFragmentInfo> getFragmentsWithFiles(
+			final Collection<Long> fileIds) throws Exception {
+		final String tableName = "CODE_FRAGMENT";
+		final String elementColumn = "OWNER_FILE_ID";
+
+		final StringBuilder builder = new StringBuilder();
+		builder.append("select * from " + tableName + " where " + elementColumn
+				+ " in (");
+
+		for (final long id : fileIds) {
+			builder.append(id + ",");
+		}
+
+		builder.deleteCharAt(builder.length() - 1);
+		builder.append(")");
+
+		return dbManager.getFragmentRetriever().retrieve(builder.toString());
+	}
+
+	public synchronized Map<Long, DBCloneSetInfo> getClonesWithFragmentIds(
+			final Collection<Long> fragIds) throws Exception {
+		final String tableName = "CLONE_SET";
+		final String elementColumn = "ELEMENT";
+
+		final StringBuilder builder = new StringBuilder();
+		builder.append("select * from " + tableName + " where " + elementColumn
+				+ " in (");
+
+		for (final long id : fragIds) {
+			builder.append(id + ",");
+		}
+
+		builder.deleteCharAt(builder.length() - 1);
+		builder.append(")");
+
+		final Map<Long, DBCloneSetInfo> clones = dbManager.getCloneRetriever()
+				.retrieve(builder.toString());
+		return clones;
+	}
+
+	public synchronized Map<Long, DBCloneGenealogyInfo> getCloneGenealogiesWithCloneIds(
+			final Collection<Long> cloneIds) throws Exception {
+		final String tableName = "CLONE_GENEALOGY_ELEMENT";
+		final String elementColumn = "CLONE_SET_ID";
+
+		final StringBuilder builder = new StringBuilder();
+		builder.append("select * from " + tableName + " where " + elementColumn
+				+ " in (");
+
+		for (final long id : cloneIds) {
+			builder.append(id + ",");
+		}
+
+		builder.deleteCharAt(builder.length() - 1);
+		builder.append(")");
+
+		final Map<Long, DBCloneGenealogyElementInfo> elements = dbManager
+				.getCloneGenealogyElementRetriever().retrieve(
+						builder.toString());
+
+		final Set<Long> cloneGenealogyIds = new HashSet<Long>();
+		for (final DBCloneGenealogyElementInfo element : elements
+				.values()) {
+			cloneGenealogyIds.add(element.getMainElementId());
+		}
+
+		return dbManager.getCloneGenealogyRetriever().retrieveWithIds(
+				cloneGenealogyIds);
 	}
 
 }

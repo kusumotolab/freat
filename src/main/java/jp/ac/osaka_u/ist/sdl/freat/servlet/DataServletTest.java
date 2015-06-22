@@ -5,6 +5,7 @@ import java.util.Map;
 import jp.ac.osaka_u.ist.sdl.ectec.db.DBConnectionManager;
 import jp.ac.osaka_u.ist.sdl.ectec.db.IDBConfig;
 import jp.ac.osaka_u.ist.sdl.ectec.db.SQLiteDBConfig;
+import jp.ac.osaka_u.ist.sdl.ectec.db.data.DBCloneGenealogyInfo;
 import jp.ac.osaka_u.ist.sdl.ectec.db.data.DBRepositoryInfo;
 import jp.ac.osaka_u.ist.sdl.ectec.main.IllegalStateException;
 import jp.ac.osaka_u.ist.sdl.ectec.vcs.RepositoryManagerManager;
@@ -14,11 +15,14 @@ public class DataServletTest {
 	public static void main(String[] args) throws Exception {
 		setup("work/test.db");
 
-		final DataServlet ds = new DataServlet();
-		ds.processCloneGenealogy((long) 1);
+		//final DataServlet ds = new DataServlet();
+		//ds.processCloneGenealogy((long) 1);
 
 		// final SrcServlet ss = new SrcServlet();
 		// ss.processFragment((long) 6649);
+		
+		final TableServlet ts = new TableServlet();
+		final Map<Long, DBCloneGenealogyInfo> results = ts.getGenealogiesWithFilePath("SystemSlicing.java");
 
 		Manager.getInstance().getDBManager().close();
 	}

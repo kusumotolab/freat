@@ -1,5 +1,6 @@
 package jp.ac.osaka_u.ist.sdl.freat.servlet;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -13,8 +14,10 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 
 import jp.ac.osaka_u.ist.sdl.ectec.db.data.DBCloneGenealogyInfo;
+import jp.ac.osaka_u.ist.sdl.ectec.db.data.DBCloneSetInfo;
 import jp.ac.osaka_u.ist.sdl.ectec.db.data.DBCodeFragmentGenealogyInfo;
 import jp.ac.osaka_u.ist.sdl.ectec.db.data.DBCodeFragmentInfo;
+import jp.ac.osaka_u.ist.sdl.ectec.db.data.DBCodeFragmentLinkInfo;
 import jp.ac.osaka_u.ist.sdl.ectec.db.data.DBCombinedRevisionInfo;
 import jp.ac.osaka_u.ist.sdl.ectec.db.data.DBFileInfo;
 import jp.ac.osaka_u.ist.sdl.ectec.db.data.DBRepositoryInfo;
@@ -23,18 +26,66 @@ import jp.ac.osaka_u.ist.sdl.ectec.db.data.DBRevisionInfo;
 public class Converter {
 
 	public static Map<String, Object> cloneGenelogiesToTableData(
-			final Map<Long, DBCloneGenealogyInfo> genealogies) {
+			final Map<Long, DBCloneGenealogyInfo> genealogies)
+			throws SQLException {
 		final List<GenealogyData> genealogyData = new ArrayList<GenealogyData>();
 		for (final DBCloneGenealogyInfo genealogy : genealogies.values()) {
-			final GenealogyData gd = new GenealogyData(genealogy.getId(),
-					genealogy.getStartCombinedRevisionId(),
-					genealogy.getEndCombinedRevisionId());
+			final GenealogyData gd = generateGenealogyData(genealogy);
 			genealogyData.add(gd);
 		}
 
 		final Map<String, Object> data = new HashMap<String, Object>();
 		data.put("genealogies", genealogyData);
 		return data;
+	}
+
+	private static GenealogyData generateGenealogyData(
+			final DBCloneGenealogyInfo genealogy) throws SQLException {
+		final Map<Long, DBCloneSetInfo> clones = Manager.getInstance()
+				.getClones(genealogy.getElements());
+
+		final Set<Long> fragmentIds = new HashSet<Long>();
+		for (final DBCloneSetInfo clone : clones.values()) {
+			fragmentIds.addAll(clone.getElements());
+		}
+
+		final long cloneGenealogyStartRevId = genealogy
+				.getStartCombinedRevisionId();
+		final Map<Long, DBCodeFragmentGenealogyInfo> fragmentGenealogies = Manager
+				.getInstance().getFragmentGenealogiesWithFragmentIds(
+						fragmentIds);
+
+		long fragmentEndRevId = -1;
+		final Set<Long> lastFragmentIds = new HashSet<Long>();
+		for (final DBCodeFragmentGenealogyInfo fragmentGenealogy : fragmentGenealogies
+				.values()) {
+			if (fragmentEndRevId < fragmentGenealogy.getEndCombinedRevisionId()) {
+				fragmentEndRevId = fragmentGenealogy.getEndCombinedRevisionId();
+			}
+			lastFragmentIds.add(fragmentGenealogy.getElements().get(
+					fragmentGenealogy.getElements().size() - 1));
+		}
+		
+		final Map<Long, DBCodeFragmentInfo> fragments = Manager.getInstance()
+				.getFragments(fragmentIds);
+		
+		final Set<Long> repoIds = new HashSet<Long>();
+		for (final DBCodeFragmentInfo fragment : fragments.values()) {
+			repoIds.add(fragment.getOwnerRepositoryId());
+		}
+
+		final long id = genealogy.getId();
+		final long startRevId = genealogy.getStartCombinedRevisionId();
+		final long endRevId = genealogy.getEndCombinedRevisionId();
+		if (fragmentEndRevId == -1) {
+			fragmentEndRevId = endRevId;
+		}
+		final int numFragments = fragmentGenealogies.size();
+		final int numProjects = repoIds.size();
+
+		final GenealogyData gd = new GenealogyData(id, startRevId, endRevId,
+				fragmentEndRevId, numFragments, numProjects);
+		return gd;
 	}
 
 	public static Map<String, Object> fragmentGenealogiesToGraphData(

@@ -2,19 +2,21 @@ var width = 1000, height = 300;
 var mt = 20, mb = 20, ml = 10, mr = 10;
 var minW = 50, minH = 100;
 
-var headerData = ["id", "start", "end", "revs"];
+var headerData = ["id", "start", "C-end", "F-end", "ghost", "#frag", "#repo"];
 
-loadTable();
+loadTable("all");
 
-function loadTable() {
+function loadTable(query) {
+	d3.select("#genealogyTable").selectAll("*").remove();
+	
 	width = window.innerWidth * 0.25;
 	height = window.innerHeight * 0.95;
 	var w = Math.max(width, minW);
 	var h = Math.max(height, minH);
 
 	d3.select("#genealogyTable").style({
-		"width": w + "px",
-		"height": h + "px"
+		"width" : w + "px",
+		"height" : h + "px"
 	});
 
 	var table = d3.select("#genealogyTable").append("table").attr("class", "bordered");
@@ -25,7 +27,12 @@ function loadTable() {
 		return d;
 	});
 
-	d3.json("/tabledata", function(err, data) {
+	query = query.trim();
+	if (!query) {
+		query = "all";
+	}
+
+	d3.json("/tabledata?query=" + query, function(err, data) {
 		var tr_td = tbody.selectAll("tr").data(data.genealogies).enter().append("tr").style("background-color", "rgba(255, 255, 255, 0.75)").attr("id", function(d) {
 			return d.id;
 		});
@@ -39,6 +46,7 @@ function loadTable() {
 		}).on("mouseout", function() {
 			d3.select(this).style("background-color", "rgba(255, 255, 255, 0.7)");
 		}).on("click", function(d) {
+			d3.select("#sourceContainer").selectAll("*").remove();
 			var idstr = d3.select(this).select("td").text();
 			load(idstr);
 		});

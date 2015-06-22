@@ -1,7 +1,6 @@
 package jp.ac.osaka_u.ist.sdl.freat.servlet;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -17,7 +16,6 @@ import jp.ac.osaka_u.ist.sdl.ectec.db.data.DBCloneGenealogyInfo;
 import jp.ac.osaka_u.ist.sdl.ectec.db.data.DBCloneSetInfo;
 import jp.ac.osaka_u.ist.sdl.ectec.db.data.DBCodeFragmentGenealogyInfo;
 import jp.ac.osaka_u.ist.sdl.ectec.db.data.DBCodeFragmentInfo;
-import jp.ac.osaka_u.ist.sdl.ectec.db.data.DBCodeFragmentLinkInfo;
 import jp.ac.osaka_u.ist.sdl.ectec.db.data.DBFileInfo;
 
 import com.google.gson.Gson;
@@ -53,7 +51,7 @@ public class DataServlet extends HttpServlet {
 			Gson gson = new Gson();
 			String output = gson.toJson(outputData);
 
-			System.out.println(output);
+			// System.out.println(output);
 
 			out.write(output.getBytes());
 			out.flush();
@@ -64,8 +62,7 @@ public class DataServlet extends HttpServlet {
 		}
 	}
 
-	public Map<String, Object> processCloneGenealogy(long id)
-			throws Exception {
+	public Map<String, Object> processCloneGenealogy(long id) throws Exception {
 		final DBCloneGenealogyInfo genealogy = Manager.getInstance()
 				.getCloneGenealogy(id);
 
@@ -95,14 +92,14 @@ public class DataServlet extends HttpServlet {
 		final Map<Long, DBCodeFragmentInfo> fragments = Manager.getInstance()
 				.getFragments(fragmentIds);
 
-		final Set<Long> fragmentLinkIds = new HashSet<Long>();
-		for (final DBCodeFragmentGenealogyInfo fragmentGenealogy : fragmentGenealogies
-				.values()) {
-			fragmentLinkIds.addAll(fragmentGenealogy.getLinks());
-		}
-
-		final Map<Long, DBCodeFragmentLinkInfo> fragmentLinks = Manager
-				.getInstance().getFragmentLinks(fragmentLinkIds);
+		/*
+		 * final Set<Long> fragmentLinkIds = new HashSet<Long>(); for (final
+		 * DBCodeFragmentGenealogyInfo fragmentGenealogy : fragmentGenealogies
+		 * .values()) { fragmentLinkIds.addAll(fragmentGenealogy.getLinks()); }
+		 * 
+		 * final Map<Long, DBCodeFragmentLinkInfo> fragmentLinks = Manager
+		 * .getInstance().getFragmentLinks(fragmentLinkIds);
+		 */
 
 		final Set<Long> fileIds = new HashSet<Long>();
 		for (final DBCodeFragmentInfo fragment : fragments.values()) {

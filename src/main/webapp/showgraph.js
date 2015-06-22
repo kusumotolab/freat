@@ -19,7 +19,7 @@ function load(id) {
 	d3.select("#graphContainer").selectAll("*").remove();
 	d3.select("#graphContainer").style("background-color", "rgba(255, 255, 255, 0.7)");
 	width = window.innerWidth * 0.7;
-	height = window.innerHeight * 0.4;
+	height = window.innerHeight * 0.35;
 
 	d3.json("/genealogy?id=" + id, function(err, data) {
 		var w = Math.max(width, minW);
@@ -37,6 +37,26 @@ function load(id) {
 			return calcX(d.afterX, data.revs, w);
 		}).attr("y2", function(d) {
 			return calcY(d.afterY, data.lines, h);
+		}).attr("stroke", function(d) {
+			if (d.changed) {
+				/*return "#00552e";*/
+				return "#e2041b";
+			} else {
+				return "#5b6356";
+			}
+		}).attr("stroke-width", function(d) {
+			if (d.changed) {
+				return "5px";
+			} else {
+				return "1.5px";
+			}
+		}).attr("stroke-dasharray", function(d) {
+			if (!d.changed) {
+				return "none";
+			} else {
+				return "4 2";
+			}
+			return "none";
 		});
 
 		svg.selectAll("circle").data(data.nodes).enter().append("circle").attr("class", "node").attr("r", function(d) {
@@ -62,6 +82,8 @@ function load(id) {
 					var colorIndex = d.inClone % colorOnMouse.length;
 					return colorOnMouse[colorIndex];
 				}
+			}).append("title").text(function(d) {
+				return d.repoName + " (Rev." + d.rev + ")\n" + d.path + "\nlines: " + d.startLine + "-" + d.endLine;
 			});
 		}).on("mouseout", function(d) {
 			d3.select(this).attr("fill", function(d) {
@@ -72,6 +94,7 @@ function load(id) {
 					return color[colorIndex];
 				}
 			});
+			d3.select(this).selectAll("title").remove();
 		}).on("click", function() {
 			var fragmentId = d3.select(this).attr("id").split("-")[1];
 			setSrc(fragmentId);
@@ -79,3 +102,9 @@ function load(id) {
 	});
 
 }
+
+
+/*$("scg circle").tipsy({
+	gravity : 'w',
+	fade : true
+});*/ 

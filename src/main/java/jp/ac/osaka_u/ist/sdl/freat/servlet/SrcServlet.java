@@ -50,7 +50,7 @@ public class SrcServlet extends HttpServlet {
 			Gson gson = new Gson();
 			String output = gson.toJson(outputData);
 
-			System.out.println(output);
+			//System.out.println(output);
 
 			out.write(output.getBytes());
 			out.flush();
