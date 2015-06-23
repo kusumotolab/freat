@@ -9,8 +9,12 @@ import jp.ac.osaka_u.ist.sdl.ectec.db.SQLiteDBConfig;
 import jp.ac.osaka_u.ist.sdl.ectec.db.data.DBRepositoryInfo;
 import jp.ac.osaka_u.ist.sdl.ectec.main.IllegalStateException;
 import jp.ac.osaka_u.ist.sdl.ectec.vcs.RepositoryManagerManager;
+import jp.ac.osaka_u.ist.sdl.freat.servlet.DataServlet;
 import jp.ac.osaka_u.ist.sdl.freat.servlet.Manager;
+import jp.ac.osaka_u.ist.sdl.freat.servlet.SrcServlet;
+import jp.ac.osaka_u.ist.sdl.freat.servlet.TableServlet;
 
+import org.apache.catalina.Context;
 import org.apache.catalina.startup.Tomcat;
 
 public class Launcher {
@@ -34,7 +38,10 @@ public class Launcher {
 
 		Tomcat tomcat = new Tomcat();
 		tomcat.setPort(Integer.parseInt(portStr));
-		tomcat.addWebapp("", new File(WEB_APP_LOCATION).getAbsolutePath());
+		Context context = tomcat.addWebapp("", new File(WEB_APP_LOCATION).getAbsolutePath());
+		tomcat.addServlet(context.getPath(), "DataServlet2", new DataServlet());
+		tomcat.addServlet(context.getPath(), "TableServlet2", new TableServlet());
+		tomcat.addServlet(context.getPath(), "SrcServlet2", new SrcServlet());
 
 		System.out.println("app base dir:"
 				+ new File("./" + WEB_APP_LOCATION).getAbsolutePath());
