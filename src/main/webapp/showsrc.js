@@ -14,7 +14,7 @@ function setSrc(fragmentId) {
 		"height": h + "px"
 	});
 
-	d3.json("/fragment?id=" + fragmentId, function(err, data) {
+	d3.json("/freatdata?fragment=" + fragmentId, function(err, data) {
 		var brush = new SyntaxHighlighter.brushes.Java(), code = data.src;
 		var lines = [];
 		for (var i = data.startLine; i <= data.endLine; i++) {

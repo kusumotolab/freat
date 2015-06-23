@@ -21,7 +21,7 @@ function load(id) {
 	width = window.innerWidth * 0.7;
 	height = window.innerHeight * 0.35;
 
-	d3.json("/genealogy?id=" + id, function(err, data) {
+	d3.json("/freatdata?genealogy=" + id, function(err, data) {
 		var w = Math.max(width, minW);
 		var h = Math.max(height, minH);
 

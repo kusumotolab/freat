@@ -19,7 +19,7 @@ import jp.ac.osaka_u.ist.sdl.ectec.db.data.DBRevisionInfo;
 
 import com.google.gson.Gson;
 
-@WebServlet(name = "SrcServlet", urlPatterns = { "/fragment" })
+//@WebServlet(name = "SrcServlet", urlPatterns = { "/fragment" })
 public class SrcServlet extends HttpServlet {
 
 	@Override

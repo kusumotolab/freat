@@ -20,7 +20,7 @@ import jp.ac.osaka_u.ist.sdl.ectec.db.data.DBFileInfo;
 
 import com.google.gson.Gson;
 
-@WebServlet(name = "DataServlet", urlPatterns = { "/genealogy" })
+//@WebServlet(name = "DataServlet", urlPatterns = { "/genealogy" })
 public class DataServlet extends HttpServlet {
 
 	@Override

@@ -32,7 +32,7 @@ function loadTable(query) {
 		query = "all";
 	}
 
-	d3.json("/tabledata?query=" + query, function(err, data) {
+	d3.json("/freatdata?query=" + query, function(err, data) {
 		var tr_td = tbody.selectAll("tr").data(data.genealogies).enter().append("tr").style("background-color", "rgba(255, 255, 255, 0.75)").attr("id", function(d) {
 			return d.id;
 		});

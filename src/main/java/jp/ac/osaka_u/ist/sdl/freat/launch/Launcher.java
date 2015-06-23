@@ -38,10 +38,7 @@ public class Launcher {
 
 		Tomcat tomcat = new Tomcat();
 		tomcat.setPort(Integer.parseInt(portStr));
-		Context context = tomcat.addWebapp("", new File(WEB_APP_LOCATION).getAbsolutePath());
-		tomcat.addServlet(context.getPath(), "DataServlet2", new DataServlet());
-		tomcat.addServlet(context.getPath(), "TableServlet2", new TableServlet());
-		tomcat.addServlet(context.getPath(), "SrcServlet2", new SrcServlet());
+		tomcat.addWebapp("", new File(WEB_APP_LOCATION).getAbsolutePath());
 
 		System.out.println("app base dir:"
 				+ new File("./" + WEB_APP_LOCATION).getAbsolutePath());

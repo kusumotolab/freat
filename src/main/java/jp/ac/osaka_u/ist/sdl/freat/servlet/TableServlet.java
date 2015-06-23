@@ -21,7 +21,7 @@ import jp.ac.osaka_u.ist.sdl.ectec.db.data.DBFileInfo;
 
 import com.google.gson.Gson;
 
-@WebServlet(name = "TableServlet", urlPatterns = { "/tabledata" })
+//@WebServlet(name = "TableServlet", urlPatterns = { "/tabledata" })
 public class TableServlet extends HttpServlet {
 
 	@Override
